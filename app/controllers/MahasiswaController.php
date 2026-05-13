@@ -1,40 +1,93 @@
 <?php
-class MahasiswaController extends Controller
-{
 
-    // Tampilan Tabel Utama
-    public function index()
-    {
+class MahasiswaController extends Controller {
+
+    /**
+     * SESI 3: Menampilkan daftar semua mahasiswa
+     */
+    public function index() {
         $data['judul'] = 'Daftar Mahasiswa';
         $data['mhs'] = $this->model('Mahasiswa')->getAll();
         $this->view('mahasiswa/index', $data);
     }
 
-    // Tampilan Form Tambah
-    public function create()
-    {
+    /**
+     * SESI 4: Menampilkan form tambah data
+     */
+    public function create() {
         $data['judul'] = 'Tambah Mahasiswa';
         $this->view('mahasiswa/create', $data);
     }
 
-    // Proses Simpan Data
-    public function store()
-    {
+    /**
+     * SESI 4: Memproses penyimpanan data baru
+     */
+    public function store() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $model = $this->model('Mahasiswa');
 
-            // Cek NPM Duplikat
+            // Validasi NPM Unik
             if ($model->cekNpm($_POST['npm'])) {
-                self::setFlash('NPM sudah ada!', 'danger');
+                self::setFlash('NPM sudah terdaftar!', 'danger');
                 header('Location: ' . BASEURL . '/mahasiswa/create');
                 exit;
             }
 
+            // Eksekusi Simpan
             if ($model->create($_POST) > 0) {
-                self::setFlash('Data berhasil ditambah', 'success');
+                self::setFlash('Data berhasil ditambahkan', 'success');
                 header('Location: ' . BASEURL . '/mahasiswa');
                 exit;
             }
+        }
+    }
+
+    /**
+     * SESI 5: Menampilkan form edit data berdasarkan ID
+     */
+    public function edit($id) {
+        $data['judul'] = 'Edit Data Mahasiswa';
+        $data['mhs'] = $this->model('Mahasiswa')->find($id);
+
+        if (!$data['mhs']) {
+            self::setFlash('Data tidak ditemukan!', 'danger');
+            header('Location: ' . BASEURL . '/mahasiswa');
+            exit;
+        }
+
+        $this->view('mahasiswa/edit', $data);
+    }
+
+    /**
+     * SESI 5: Memproses pembaruan data
+     */
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->model('Mahasiswa')->update($id, $_POST) > 0) {
+                self::setFlash('Data berhasil diubah', 'success');
+                header('Location: ' . BASEURL . '/mahasiswa');
+                exit;
+            } else {
+                // Jika tidak ada perubahan pada input, tetap arahkan ke index
+                self::setFlash('Tidak ada perubahan pada data', 'info');
+                header('Location: ' . BASEURL . '/mahasiswa');
+                exit;
+            }
+        }
+    }
+
+    /**
+     * SESI 5: Memproses penghapusan data
+     */
+    public function delete($id) {
+        if ($this->model('Mahasiswa')->delete($id) > 0) {
+            self::setFlash('Data berhasil dihapus', 'success');
+            header('Location: ' . BASEURL . '/mahasiswa');
+            exit;
+        } else {
+            self::setFlash('Gagal menghapus data!', 'danger');
+            header('Location: ' . BASEURL . '/mahasiswa');
+            exit;
         }
     }
 }

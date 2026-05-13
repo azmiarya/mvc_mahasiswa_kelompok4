@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $data['judul']; ?></title>
     <style>
-        /* --- CSS STYLING --- */
+        /* --- CSS STYLING ASLI KAMU --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
@@ -16,7 +16,7 @@
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px; /* Diperlebar sedikit untuk kolom aksi */
             margin: 0 auto;
             background: #fff;
             padding: 30px;
@@ -30,7 +30,6 @@
             font-weight: 600;
         }
 
-        /* Navigasi & Tombol */
         .nav-actions {
             display: flex;
             justify-content: space-between;
@@ -64,12 +63,32 @@
             background-color: #1557b0;
         }
 
-        /* Flash Message */
+        /* Styling Tambahan untuk Tombol Aksi */
+        .btn-edit {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-delete {
+            color: #d93025;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            text-decoration: underline;
+        }
+
         .flash-container {
             margin-bottom: 20px;
         }
 
-        /* Tabel Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -103,7 +122,6 @@
             background-color: #fcfcfc;
         }
 
-        /* Status Badge */
         .status-badge {
             padding: 5px 12px;
             border-radius: 20px;
@@ -122,22 +140,10 @@
             color: #d93025;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-
-            .nav-actions {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-            }
+            body { padding: 15px; }
+            .nav-actions { flex-direction: column; align-items: flex-start; gap: 15px; }
+            table { display: block; overflow-x: auto; }
         }
     </style>
 </head>
@@ -166,7 +172,7 @@
                     <th>L/P</th>
                     <th>Tempat, Tgl Lahir</th>
                     <th>Status</th>
-                </tr>
+                    <th>Aksi</th> </tr>
             </thead>
             <tbody>
                 <?php $no = 1;
@@ -182,6 +188,13 @@
                             <span class="status-badge <?= ($mhs['status_id'] == 1) ? 'status-aktif' : 'status-non'; ?>">
                                 <?= ($mhs['status_id'] == 1) ? 'Aktif' : 'Nonaktif'; ?>
                             </span>
+                        </td>
+                        <td>
+                            <a href="<?= BASEURL; ?>/mahasiswa/edit/<?= $mhs['id']; ?>" class="btn-edit">Edit</a>
+                            
+                            <a href="<?= BASEURL; ?>/mahasiswa/delete/<?= $mhs['id']; ?>" 
+                               class="btn-delete" 
+                               onclick="return confirm('Yakin ingin menghapus data <?= $mhs['nama_lengkap']; ?>?')">Hapus</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
