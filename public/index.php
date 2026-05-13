@@ -6,7 +6,7 @@ require_once '../core/Router.php';
 require_once '../core/Controller.php';
 require_once '../core/Database.php';
 
-define('BASEURL', 'http://localhost/mvc_mahasiswa/public');
+define('BASEURL', 'http://localhost/mvc_mahasiswa_kelompok4/public');
 
 $app = new Router();
 $app->run();
