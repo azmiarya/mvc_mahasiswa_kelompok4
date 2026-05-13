@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $data['judul']; ?></title>
+
+    <!-- Link Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        /* --- CSS STYLING ASLI KAMU --- */
+        /* --- CSS STYLING --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
@@ -16,7 +20,7 @@
         }
 
         .container {
-            max-width: 1200px; /* Diperlebar sedikit untuk kolom aksi */
+            max-width: 1200px;
             margin: 0 auto;
             background: #fff;
             padding: 30px;
@@ -30,6 +34,7 @@
             font-weight: 600;
         }
 
+        /* Navigasi & Tombol Atas */
         .nav-actions {
             display: flex;
             justify-content: space-between;
@@ -42,6 +47,9 @@
             color: #666;
             font-size: 14px;
             transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .btn-back:hover {
@@ -56,39 +64,21 @@
             border-radius: 8px;
             font-weight: 500;
             transition: background 0.3s;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-add:hover {
             background-color: #1557b0;
         }
 
-        /* Styling Tambahan untuk Tombol Aksi */
-        .btn-edit {
-            color: #1a73e8;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .btn-delete {
-            color: #d93025;
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 10px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            padding: 0;
-        }
-
-        .btn-edit:hover, .btn-delete:hover {
-            text-decoration: underline;
-        }
-
+        /* Flash Message */
         .flash-container {
             margin-bottom: 20px;
         }
 
+        /* Tabel Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -122,6 +112,7 @@
             background-color: #fcfcfc;
         }
 
+        /* Status Badge */
         .status-badge {
             padding: 5px 12px;
             border-radius: 20px;
@@ -140,10 +131,69 @@
             color: #d93025;
         }
 
-        @media (max-width: 768px) {
-            body { padding: 15px; }
-            .nav-actions { flex-direction: column; align-items: flex-start; gap: 15px; }
-            table { display: block; overflow-x: auto; }
+        /* Tombol Aksi (Edit & Hapus) */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background-color: #fff;
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid #1a73e8;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            background-color: #1a73e8;
+            color: #fff;
+        }
+
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background-color: #fff;
+            color: #d93025;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid #d93025;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            background-color: #d93025;
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            body {
+                padding: 15px;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
@@ -153,9 +203,13 @@
         <div class="nav-actions">
             <div>
                 <h1>Daftar Mahasiswa</h1>
-                <a href="<?= BASEURL; ?>/home" class="btn-back">← Kembali ke Home</a>
+                <a href="<?= BASEURL; ?>/home" class="btn-back">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Home
+                </a>
             </div>
-            <a href="<?= BASEURL; ?>/mahasiswa/create" class="btn-add">+ Tambah Mahasiswa</a>
+            <a href="<?= BASEURL; ?>/mahasiswa/create" class="btn-add">
+                <i class="fa-solid fa-plus"></i> Tambah Mahasiswa
+            </a>
         </div>
 
         <div class="flash-container">
@@ -172,7 +226,8 @@
                     <th>L/P</th>
                     <th>Tempat, Tgl Lahir</th>
                     <th>Status</th>
-                    <th>Aksi</th> </tr>
+                    <th>Aksi</th>
+                </tr>
             </thead>
             <tbody>
                 <?php $no = 1;
@@ -190,11 +245,17 @@
                             </span>
                         </td>
                         <td>
-                            <a href="<?= BASEURL; ?>/mahasiswa/edit/<?= $mhs['id']; ?>" class="btn-edit">Edit</a>
-                            
-                            <a href="<?= BASEURL; ?>/mahasiswa/delete/<?= $mhs['id']; ?>" 
-                               class="btn-delete" 
-                               onclick="return confirm('Yakin ingin menghapus data <?= $mhs['nama_lengkap']; ?>?')">Hapus</a>
+                            <div class="action-buttons">
+                                <a href="<?= BASEURL; ?>/mahasiswa/edit/<?= $mhs['id']; ?>" class="btn-edit">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+
+                                <a href="<?= BASEURL; ?>/mahasiswa/delete/<?= $mhs['id']; ?>"
+                                    class="btn-delete"
+                                    onclick="return confirm('Yakin ingin menghapus data <?= $mhs['nama_lengkap']; ?>?')">
+                                    <i class="fa-solid fa-trash"></i> Hapus
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
