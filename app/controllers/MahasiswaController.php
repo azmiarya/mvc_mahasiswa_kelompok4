@@ -3,11 +3,23 @@
 class MahasiswaController extends Controller {
 
     /**
-     * SESI 3: Menampilkan daftar semua mahasiswa
+     * SESI 6: Menampilkan daftar mahasiswa dengan fitur Search & Filter
      */
     public function index() {
         $data['judul'] = 'Daftar Mahasiswa';
-        $data['mhs'] = $this->model('Mahasiswa')->getAll();
+
+        // Tangkap parameter GET untuk pencarian dan filter
+        $search = isset($_GET['search']) ? $_GET['search'] : '';
+        $jurusan = isset($_GET['jurusan']) ? $_GET['jurusan'] : '';
+
+        // Jika user melakukan pencarian atau memilih filter jurusan
+        if (!empty($search) || !empty($jurusan)) {
+            $data['mhs'] = $this->model('Mahasiswa')->searchAndFilter($search, $jurusan);
+        } else {
+            // Jika tidak ada filter, tampilkan semua data seperti biasa
+            $data['mhs'] = $this->model('Mahasiswa')->getAll();
+        }
+
         $this->view('mahasiswa/index', $data);
     }
 

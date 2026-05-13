@@ -20,6 +20,34 @@ class Mahasiswa {
     }
 
     /**
+     * SESI 6: FITUR PENCARIAN DAN FILTER DATA
+     * Method ini menyusun query dinamis berdasarkan input user
+     */
+    public function searchAndFilter($search = '', $jurusan = '') {
+        // Gunakan WHERE 1=1 agar penambahan AND di bawahnya lebih mudah
+        $query = "SELECT * FROM " . $this->table . " WHERE 1=1";
+        $params = [];
+
+        // Jika user mengisi kolom pencarian (NPM atau Nama)
+        if (!empty($search)) {
+            $query .= " AND (npm LIKE :search OR nama_lengkap LIKE :search)";
+            $params['search'] = "%$search%";
+        }
+
+        // Jika user memilih filter jurusan tertentu
+        if (!empty($jurusan)) {
+            $query .= " AND jurusan = :jurusan";
+            $params['jurusan'] = $jurusan;
+        }
+
+        $query .= " ORDER BY id DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * SESI 4: Mengecek apakah NPM sudah ada (untuk validasi unik)
      */
     public function cekNpm($npm) {
