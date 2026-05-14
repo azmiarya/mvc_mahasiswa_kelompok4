@@ -1,11 +1,13 @@
 <?php
 
-class MahasiswaController extends Controller {
+class MahasiswaController extends Controller
+{
 
     /**
      * SESI 6: Menampilkan daftar mahasiswa dengan fitur Search & Filter
      */
-    public function index() {
+    public function index()
+    {
         $data['judul'] = 'Daftar Mahasiswa';
 
         // Tangkap parameter GET untuk pencarian dan filter
@@ -16,25 +18,32 @@ class MahasiswaController extends Controller {
         if (!empty($search) || !empty($jurusan)) {
             $data['mhs'] = $this->model('Mahasiswa')->searchAndFilter($search, $jurusan);
         } else {
-            // Jika tidak ada filter, tampilkan semua data seperti biasa
             $data['mhs'] = $this->model('Mahasiswa')->getAll();
         }
 
+        // WAJIB: Panggil templates agar Navbar & Bootstrap muncul
+        $this->view('layouts/header', $data);
         $this->view('mahasiswa/index', $data);
+        $this->view('layouts/footer');
     }
 
     /**
      * SESI 4: Menampilkan form tambah data
      */
-    public function create() {
+    public function create()
+    {
         $data['judul'] = 'Tambah Mahasiswa';
+
+        $this->view('layouts/header', $data);
         $this->view('mahasiswa/create', $data);
+        $this->view('layouts/footer');
     }
 
     /**
      * SESI 4: Memproses penyimpanan data baru
      */
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $model = $this->model('Mahasiswa');
 
@@ -57,7 +66,8 @@ class MahasiswaController extends Controller {
     /**
      * SESI 5: Menampilkan form edit data berdasarkan ID
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         $data['judul'] = 'Edit Data Mahasiswa';
         $data['mhs'] = $this->model('Mahasiswa')->find($id);
 
@@ -67,20 +77,22 @@ class MahasiswaController extends Controller {
             exit;
         }
 
+        $this->view('layouts/header', $data);
         $this->view('mahasiswa/edit', $data);
+        $this->view('layouts/footer');
     }
 
     /**
      * SESI 5: Memproses pembaruan data
      */
-    public function update($id) {
+    public function update($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($this->model('Mahasiswa')->update($id, $_POST) > 0) {
                 self::setFlash('Data berhasil diubah', 'success');
                 header('Location: ' . BASEURL . '/mahasiswa');
                 exit;
             } else {
-                // Jika tidak ada perubahan pada input, tetap arahkan ke index
                 self::setFlash('Tidak ada perubahan pada data', 'info');
                 header('Location: ' . BASEURL . '/mahasiswa');
                 exit;
@@ -91,7 +103,8 @@ class MahasiswaController extends Controller {
     /**
      * SESI 5: Memproses penghapusan data
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($this->model('Mahasiswa')->delete($id) > 0) {
             self::setFlash('Data berhasil dihapus', 'success');
             header('Location: ' . BASEURL . '/mahasiswa');
